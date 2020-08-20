@@ -1,18 +1,36 @@
 /* eslint camelcase: 0 */
 // FormData uses snake_cased keys.
-import { MetricKey, AdhocMetric } from './Metric';
+import { AdhocMetric } from './Metric';
 import { TimeRange } from './Time';
 import { AdhocFilter } from './Filter';
+import { BinaryOperator, SetOperator } from './Operator';
 
 export type QueryFormDataMetric = string | AdhocMetric;
+export type QueryFormResidualDataValue = string | AdhocMetric;
+export type QueryFormResidualData = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [key: string]: any;
+};
+export type TimeRangeEndpoint = 'unknown' | 'inclusive' | 'exclusive';
+export type TimeRangeEndpoints = [TimeRangeEndpoint, TimeRangeEndpoint];
 
-// Define mapped type separately to work around a limitation of TypeScript
-// https://github.com/Microsoft/TypeScript/issues/13573
-// The Metrics in formData is either a string or a proper metric. It will be
-// unified into a proper Metric type during buildQuery (see `/query/Metrics.ts`).
-export type QueryFormDataMetrics = Partial<
-  Record<MetricKey, QueryFormDataMetric | QueryFormDataMetric[]>
->;
+// Currently only Binary and Set filters are supported
+export type QueryFields = {
+  [key: string]: string;
+};
+
+export type QueryFormExtraFilter = {
+  col: string;
+} & (
+  | {
+      op: BinaryOperator;
+      val: string;
+    }
+  | {
+      op: SetOperator;
+      val: string[];
+    }
+);
 
 // Type signature for formData shared by all viz types
 // It will be gradually filled out as we build out the query object
@@ -37,16 +55,25 @@ export type BaseFormData = {
   all_columns?: string[];
   /** list of filters */
   adhoc_filters?: AdhocFilter[];
+  extra_filters?: QueryFormExtraFilter[];
   /** order descending */
   order_desc?: boolean;
   /** limit number of time series */
   limit?: number;
   /** limit number of row in the results */
-  row_limit?: number;
+  row_limit?: string | number | null;
+  /** row offset for server side pagination */
+  row_offset?: string | number | null;
   /** The metric used to order timeseries for limiting */
-  timeseries_limit_metric?: QueryFormDataMetric;
+  timeseries_limit_metric?: QueryFormResidualDataValue;
+  /** Force refresh */
+  force?: boolean;
+  result_format?: string;
+  result_type?: string;
+  queryFields?: QueryFields;
+  time_range_endpoints?: TimeRangeEndpoints;
 } & TimeRange &
-  QueryFormDataMetrics;
+  QueryFormResidualData;
 
 // FormData is either sqla-based or druid-based
 export type SqlaFormData = {
@@ -69,8 +96,4 @@ export type QueryFormData = SqlaFormData | DruidFormData;
 
 export function isDruidFormData(formData: QueryFormData): formData is DruidFormData {
   return 'granularity' in formData;
-}
-
-export function isSqlaFormData(formData: QueryFormData): formData is SqlaFormData {
-  return 'granularity_sqla' in formData;
 }

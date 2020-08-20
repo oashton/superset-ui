@@ -21,12 +21,12 @@ describe('convertFilter', () => {
         expressionType: 'SIMPLE',
         clause: 'WHERE',
         subject: 'topping',
-        operator: '=',
+        operator: '==',
         comparator: 'grass jelly',
       }),
     ).toEqual({
       col: 'topping',
-      op: '=',
+      op: '==',
       val: 'grass jelly',
     });
   });
@@ -37,12 +37,12 @@ describe('convertFilter', () => {
         expressionType: 'SIMPLE',
         clause: 'WHERE',
         subject: 'toppings',
-        operator: 'in',
+        operator: 'IN',
         comparator: ['boba', 'grass jelly'],
       }),
     ).toEqual({
       col: 'toppings',
-      op: 'in',
+      op: 'IN',
       val: ['boba', 'grass jelly'],
     });
   });

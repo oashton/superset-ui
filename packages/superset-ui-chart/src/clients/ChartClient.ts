@@ -3,13 +3,12 @@ import {
   SupersetClient,
   SupersetClientInterface,
   RequestConfig,
-  Json,
   SupersetClientClass,
 } from '@superset-ui/connection';
 import { QueryFormData, Datasource } from '@superset-ui/query';
 import getChartBuildQueryRegistry from '../registries/ChartBuildQueryRegistrySingleton';
 import getChartMetadataRegistry from '../registries/ChartMetadataRegistrySingleton';
-import { QueryData } from '../models/ChartProps';
+import { QueryData } from '../types/QueryResponse';
 import { AnnotationLayerMetadata } from '../types/Annotation';
 import { PlainObject } from '../types/Base';
 
@@ -52,11 +51,10 @@ export default class ChartClient {
     if ('sliceId' in input) {
       const promise = this.client
         .get({
-          endpoint: `/api/v1/formData/?slice_id=${input.sliceId}`,
+          endpoint: `/api/v1/form_data/?slice_id=${input.sliceId}`,
           ...options,
         } as RequestConfig)
-        .then(response => response.json as Json)
-        .then(json => json.form_data);
+        .then(response => response.json as QueryFormData);
 
       /*
        * If formData is also specified, override API result
@@ -85,16 +83,26 @@ export default class ChartClient {
     if (metaDataRegistry.has(visType)) {
       const { useLegacyApi } = metaDataRegistry.get(visType)!;
       const buildQuery = (await buildQueryRegistry.get(visType)) ?? (() => formData);
+      const requestConfig: RequestConfig = useLegacyApi
+        ? {
+            endpoint: '/superset/explore_json/',
+            postPayload: {
+              form_data: buildQuery(formData),
+            },
+            ...options,
+          }
+        : {
+            endpoint: '/api/v1/chart/data',
+            jsonPayload: {
+              query_context: buildQuery(formData),
+            },
+            ...options,
+          };
 
-      return this.client
-        .post({
-          endpoint: useLegacyApi ? '/superset/explore_json/' : '/api/v1/query/',
-          postPayload: {
-            [useLegacyApi ? 'form_data' : 'query_context']: buildQuery(formData),
-          },
-          ...options,
-        } as RequestConfig)
-        .then(response => response.json as Json);
+      return this.client.post(requestConfig).then(response => {
+        // let's assume response.json always has the shape of QueryData
+        return response.json as QueryData;
+      });
     }
 
     return Promise.reject(new Error(`Unknown chart type: ${visType}`));

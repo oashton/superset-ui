@@ -4,12 +4,17 @@
   "description": "Superset UI",
   "private": true,
   "scripts": {
-    "build": "yarn babel && yarn type && yarn build:assets",
+    "build": "node ./scripts/build.js",
+    "build:assets": "node ./scripts/copyAssets.js",
     "babel": "yarn babel:cjs && yarn babel:esm",
-    "babel:cjs": "nimbus babel --clean --workspaces=\"@superset-ui/!(demo|generator-superset)\"",
-    "babel:esm": "nimbus babel --clean --workspaces=\"@superset-ui/!(demo|generator-superset)\" --esm",
-    "build:assets": "node ./scripts/buildAssets.js",
-    "clean": "rm -rf ./packages/**/{lib,esm}",
+    "babel:cjs": "nimbus babel --clean --workspaces=\"@superset-ui/!(demo|generator-superset)\" --config-file=../../babel.config.js",
+    "babel:esm": "nimbus babel --clean --workspaces=\"@superset-ui/!(demo|generator-superset)\" --esm --config-file=../../babel.config.js",
+    "demo": "cd packages/superset-ui-demo && yarn demo:build",
+    "demo:clean": "cd packages/superset-ui-demo && yarn demo:clean",
+    "demo:build": "cd packages/superset-ui-demo && yarn demo:build",
+    "storybook": "cd packages/superset-ui-demo && yarn storybook",
+    "sb": "yarn storybook",
+    "clean": "rm -rf ./{packages,plugins}/**/{lib,esm,tsconfig.tsbuildinfo} build/",
     "commit": "superset-commit",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 10",
     "format": "yarn prettier --write",
@@ -20,12 +25,19 @@
     "test": "yarn jest",
     "test:watch": "yarn lint:fix && yarn jest --watch",
     "type": "nimbus typescript --build --reference-workspaces",
-    "prepare-release": "git checkout master && git pull --rebase origin master && lerna bootstrap && yarn install && yarn test",
+    "prepare-release": "git checkout master && git pull --rebase origin master && yarn install && yarn test",
     "prerelease": "yarn build",
     "pretest": "yarn lint",
-    "release": "yarn prepare-release && lerna publish --exact && yarn postrelease",
-    "force-release": "lerna publish --force-publish --exact && yarn postrelease",
-    "postrelease": "lerna run deploy-demo"
+    "release": "yarn prepare-release && lerna publish && yarn postrelease",
+    "postrelease": "lerna run deploy-demo",
+    "list-changed-packages": "lerna changed",
+    "manual-release": "lerna publish --force-publish && yarn postrelease",
+    "clean-npm-lock": "rm -rf package-lock.json ./{packages,plugins}/*/package-lock.json",
+    "ci:create-patch-version": "yarn clean-npm-lock && lerna version patch --yes",
+    "ci:create-minor-version": "yarn clean-npm-lock && lerna version minor --yes",
+    "ci:create-conventional-version": "yarn clean-npm-lock && lerna version --conventional-commits --create-release github --yes",
+    "ci:release-from-tag": "yarn clean-npm-lock && lerna publish from-package --yes",
+    "ci:release-conventional": "yarn clean-npm-lock && lerna publish --conventional-commits --create-release github --yes"
   },
   "repository": "https://github.com/apache-superset/superset-ui.git",
   "keywords": [
@@ -41,30 +53,32 @@
     "vx"
   ],
   "license": "Apache-2.0",
-  "devDependencies": {
-    "@airbnb/config-babel": "^2.1.3",
-    "@airbnb/config-eslint": "^2.1.3",
-    "@airbnb/config-jest": "^2.1.3",
-    "@airbnb/config-prettier": "^2.0.4",
-    "@airbnb/config-typescript": "^2.1.2",
-    "@airbnb/nimbus": "^2.1.3",
+  "dependencies": {
+    "@airbnb/config-babel": "^3.1.0",
+    "@airbnb/config-eslint": "^3.1.0",
+    "@airbnb/config-jest": "^3.0.1",
+    "@airbnb/config-prettier": "^3.1.0",
+    "@airbnb/config-typescript": "^3.0.1",
+    "@airbnb/nimbus": "^3.1.2",
     "@superset-ui/commit-config": "^0.0.9",
     "@types/enzyme": "^3.10.3",
-    "@types/jest": "^25.1.1",
+    "@types/jest": "^26.0.4",
     "@types/jsdom": "^12.2.4",
-    "@types/react-test-renderer": "^16.9.0",
-    "enzyme": "^3.10.0",
+    "@types/react-test-renderer": "^16.9.2",
+    "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.1",
     "enzyme-to-json": "^3.4.3",
     "fast-glob": "^3.0.1",
-    "fs-extra": "^8.0.1",
-    "husky": "^4.2.1",
+    "fs-extra": "^9.0.0",
+    "husky": "^4.2.5",
+    "identity-obj-proxy": "^3.0.0",
     "jest-mock-console": "^1.0.0",
     "lerna": "^3.15.0",
     "lint-staged": "^10.0.3",
-    "react-test-renderer": "^16.9.0",
-    "react-dom": "^16.9.0",
-    "react": "^16.9.0"
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-test-renderer": "^16.13.1",
+    "rimraf": "^3.0.2"
   },
   "engines": {
     "node": ">=10.10.0",
@@ -72,7 +86,8 @@
     "yarn": ">=1.13.0"
   },
   "workspaces": [
-    "./packages/*"
+    "./packages/*",
+    "./plugins/*"
   ],
   "browserslist": [
     "last 3 chrome versions",
@@ -82,7 +97,10 @@
   ],
   "nimbus": {
     "drivers": [
-      "babel",
+      {
+        "driver": "babel",
+        "strategy": "none"
+      },
       "eslint",
       "jest",
       "prettier",
@@ -100,9 +118,24 @@
       "globals": {
         "caches": true
       },
+      "coverageThreshold": {
+        "global": {
+          "branches": 0,
+          "functions": 0,
+          "lines": 0,
+          "statements": 0
+        }
+      },
+      "moduleNameMapper": {
+        "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
+        "\\.(css|less)$": "identity-obj-proxy"
+      },
       "timers": "real",
       "setupFilesAfterEnv": [
         "@airbnb/config-jest/enzyme"
+      ],
+      "transformIgnorePatterns": [
+        "node_modules/(?!(vega-lite|lodash-es))"
       ],
       "testPathIgnorePatterns": [
         "packages/generator-superset/generators"
@@ -119,7 +152,16 @@
         }
       ]
     },
+    "prettier": {
+      "arrowParens": "avoid"
+    },
     "eslint": {
+      "rules": {
+        "arrow-parens": [
+          "warn",
+          "as-needed"
+        ]
+      },
       "overrides": [
         {
           "files": "./packages/generator-superset/**/*.test.{js,jsx,ts,tsx}",
@@ -128,7 +170,7 @@
           }
         },
         {
-          "files": "*.test.{js,jsx,ts,tsx}",
+          "files": "**/test/**/*",
           "rules": {
             "import/no-extraneous-dependencies": "off",
             "promise/param-names": "off",
@@ -140,28 +182,47 @@
         {
           "files": "*.{js,jsx,ts,tsx}",
           "rules": {
+            "import/extensions": "off",
+            "no-plusplus": "off",
             "react/jsx-no-literals": "off",
-            "@typescript-eslint/no-explicit-any": ["warn", { "fixToUnknown": false }]
+            "@typescript-eslint/no-explicit-any": [
+              "warn",
+              {
+                "fixToUnknown": false
+              }
+            ]
+          }
+        },
+        {
+          "files": "./scripts/*",
+          "env": {
+            "node": true
           }
         }
       ]
     },
     "typescript": {
       "compilerOptions": {
-        "emitDeclarationOnly": true
+        "rootDir": "./src",
+        "declaration": true,
+        "emitDeclarationOnly": true,
+        "composite": true,
+        "resolveJsonModule": true
       }
     }
   },
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged",
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+      "commit-msg": "./scripts/commitlint.js HUSKY_GIT_PARAMS"
     }
   },
   "lint-staged": {
-    "./packages/*/{src,test,storybook}/**/*.{js,jsx,ts,tsx,json,md}": [
-      "yarn prettier --write",
-      "git add"
+    "./{packages,plugins}/*/{src,test,storybook}/**/*.{js,jsx,ts,tsx,json,md}": [
+      "yarn prettier"
+    ],
+    "./{packages,plugins}/*.md": [
+      "yarn prettier"
     ]
   }
 }

@@ -2,8 +2,25 @@
   "lerna": "3.2.1",
   "npmClient": "yarn",
   "packages": [
-    "packages/*"
+    "packages/*",
+    "plugins/*"
   ],
   "useWorkspaces": true,
-  "version": "0.12.11"
+  "version": "0.14.19",
+  "ignoreChanges": [
+    "**/*.md",
+    "**/*.spec.tsx?",
+    "**/*.spec.jsx?",
+    "**/__mocks__/**"
+  ],
+  "command": {
+    "publish": {
+      "message": "chore: publish %s",
+      "graphType": "all"
+    },
+    "version": {
+      "message": "chore: publish %s",
+      "exact": true
+    }
+  }
 }

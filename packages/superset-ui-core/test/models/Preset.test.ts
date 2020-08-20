@@ -1,5 +1,4 @@
-import Plugin from '../../src/models/Plugin';
-import Preset from '../../src/models/Preset';
+import { Plugin, Preset } from '../../src';
 
 describe('Preset', () => {
   it('exists', () => {
@@ -40,7 +39,7 @@ describe('Preset', () => {
       class Plugin4 extends Plugin {
         register() {
           const { key } = this.config;
-          values.push(key);
+          values.push(key as number);
 
           return this;
         }
