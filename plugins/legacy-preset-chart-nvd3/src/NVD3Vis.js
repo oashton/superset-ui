@@ -234,6 +234,7 @@ const propTypes = {
   xField: stringOrObjectWithLabelType,
   yField: stringOrObjectWithLabelType,
   sizeField: stringOrObjectWithLabelType,
+  sizeFormat: PropTypes.string,
   // time-pivot only
   baseColor: rgbObjectType,
 };
@@ -279,6 +280,7 @@ function nvd3Vis(element, props) {
     showLegend,
     showMarkers,
     sizeField,
+    sizeFormat,
     useRichTooltip,
     vizType,
     xAxisFormat,
@@ -471,7 +473,7 @@ function nvd3Vis(element, props) {
             sizeField,
             xFormatter: getTimeOrNumberFormatter(xAxisFormat),
             yFormatter: getTimeOrNumberFormatter(yAxisFormat),
-            sizeFormatter: formatter,
+            sizeFormatter: getTimeOrNumberFormatter(sizeFormat),
           }),
         );
         chart.pointRange([5, maxBubbleSize ** 2]);
