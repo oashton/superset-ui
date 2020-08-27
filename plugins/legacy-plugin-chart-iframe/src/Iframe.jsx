@@ -58,6 +58,7 @@ componentDidMount(){
     const jsonExtraFilters = JSON.stringify( extraFilters );
     const areRecords = typeof jsonRecords === 'undefined' ? false : true;
     this.areRecords = areRecords;
+    completeUrl = completeUrl.replace( "%HOST%", window.location.hostname);
 
     return (
       <div>
