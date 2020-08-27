@@ -17,6 +17,7 @@
  * under the License.
  */
 import { t } from '@superset-ui/translation';
+import { ColumnOption} from '@superset-ui/chart-controls';
 
 export default {
   controlPanelSections: [
@@ -34,6 +35,25 @@ export default {
                   '{{ width }} and/or {{ height }} in your URL string.',
               ),
               default: '',
+            },
+          },
+          {
+            name: 'all_columns',
+            config: {
+              type: 'SelectControl',
+              label: t('Columns'),
+              description: t('Columns to display'),
+              multi: true,
+              freeForm: true,
+              allowAll: true,
+              commaChoosesOption: false,
+              default: [],
+              optionRenderer: c => <ColumnOption showType column={c} />,
+              valueRenderer: c => <ColumnOption column={c} />,
+              valueKey: 'column_name',
+              mapStateToProps: ({ datasource, controls }) => ({
+                options: datasource?.columns || [],
+              }),
             },
           },
         ],
