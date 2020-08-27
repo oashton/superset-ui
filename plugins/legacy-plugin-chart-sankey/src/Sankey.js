@@ -53,11 +53,13 @@ function Sankey(element, props) {
   const innerWidth = width - margin.left - margin.right;
   const innerHeight = height - margin.top - margin.bottom;
 
+  const heightTooltipDiv = 10;
+
   div.selectAll('*').remove();
   const svg = div
     .append('svg')
     .attr('width', innerWidth + margin.left + margin.right)
-    .attr('height', innerHeight + margin.top + margin.bottom)
+    .attr('height', innerHeight + margin.top + margin.bottom - heightTooltipDiv)
     .append('g')
     .attr('transform', `translate(${margin.left},${margin.top})`);
 
@@ -65,7 +67,7 @@ function Sankey(element, props) {
 
   const colorFn = CategoricalColorNamespace.getScale(colorScheme);
 
-  const sankey = d3Sankey().nodeWidth(15).nodePadding(10).size([innerWidth, innerHeight]);
+  const sankey = d3Sankey().nodeWidth(15).nodePadding(10).size([innerWidth, innerHeight - heightTooltipDiv]);
 
   const path = sankey.link();
 
@@ -97,16 +99,15 @@ function Sankey(element, props) {
       html = [
         "<div class=''>Path Value: <span class='emph'>",
         val,
-        '</span></div>',
-        "<div class='percents'>",
+        "</span>; ",
         "<span class='emph'>",
         Number.isFinite(sourcePercent) ? sourcePercent : '100',
         '%</span> of ',
         d.source.name,
-        '<br/>',
+        "; ",
         `<span class='emph'>${Number.isFinite(targetPercent) ? targetPercent : '--'}%</span> of `,
         d.target.name,
-        '</div>',
+        "</div>",
       ].join('');
     }
 
