@@ -22,7 +22,7 @@ import d3 from 'd3';
 import PropTypes from 'prop-types';
 import { sankey as d3Sankey } from 'd3-sankey';
 import { CategoricalColorNamespace } from '@superset-ui/color';
-import { getNumberFormatter, NumberFormats } from '@superset-ui/number-format';
+import { getNumberFormatter, NumberFormats, createD3NumberFormatter } from '@superset-ui/number-format';
 
 const propTypes = {
   data: PropTypes.arrayOf(
@@ -38,6 +38,15 @@ const propTypes = {
 };
 
 const formatNumber = getNumberFormatter(NumberFormats.FLOAT);
+const formatNumber = createD3NumberFormatter({
+  formatString: ',.2f',
+  locale: {
+    decimal: ',',
+    thousands: '.',
+    grouping: [3],
+    currency: ['$', ''],
+  },
+});
 
 function Sankey(element, props) {
   const { data, width, height, colorScheme } = props;
@@ -101,11 +110,11 @@ function Sankey(element, props) {
         val,
         "</span>; ",
         "<span class='emph'>",
-        Number.isFinite(sourcePercent) ? sourcePercent : '100',
+        Number.isFinite(sourcePercent) ? formatNumber(sourcePercent) : '100',
         '%</span> of ',
         d.source.name,
         "; ",
-        `<span class='emph'>${Number.isFinite(targetPercent) ? targetPercent : '--'}%</span> of `,
+        `<span class='emph'>${Number.isFinite(targetPercent) ? formatNumber(targetPercent) : '--'}%</span> of `,
         d.target.name,
         "</div>",
       ].join('');
