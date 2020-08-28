@@ -16,8 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+ import React from 'react';
 import { t } from '@superset-ui/translation';
-import { sections } from '@superset-ui/chart-controls';
+import { sections,ColumnOption } from '@superset-ui/chart-controls';
 import { xAxisFormat, yAxis2Format } from '../NVD3Controls';
 
 export default {
@@ -41,6 +42,34 @@ export default {
       label: t('Query'),
       expanded: true,
       controlSetRows: [['adhoc_filters']],
+    },
+    {
+      label: t('Others'),
+      expanded: true,
+      controlSetRows: [
+        [
+          {
+            name: 'all_columns_filter_required'
+            config: {
+              type: 'SelectControl',
+              label: t('Column Filter Required'),
+              description: t('Required Column to Filter Object'),
+              multi: true,
+              freeForm: true,
+              allowAll: true,
+              commaChoosesOption: false,
+              default: [],
+              optionRenderer: (c:any) => React.createElement(ColumnOption, { showType: true, column: c }),
+              valueRenderer: (c:any) => React.createElement(ColumnOption, { column: c }),
+              valueKey: 'column_name',
+              mapStateToProps: (state:any) => ({
+                options: state.datasource ? state.datasource.columns : [],
+              }),
+              renderTrigger: true,
+             },
+          },
+        ],
+      ],
     },
     sections.annotations,
   ],

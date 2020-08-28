@@ -81,6 +81,34 @@ export default {
         ['y_axis_format', yAxisBounds],
       ],
     },
+    {
+      label: t('Others'),
+      expanded: true,
+      controlSetRows: [
+        [
+          {
+            name: 'all_columns_filter_required'
+            config: {
+              type: 'SelectControl',
+              label: t('Column Filter Required'),
+              description: t('Required Column to Filter Object'),
+              multi: true,
+              freeForm: true,
+              allowAll: true,
+              commaChoosesOption: false,
+              default: [],
+              optionRenderer: (c:any) => React.createElement(ColumnOption, { showType: true, column: c }),
+              valueRenderer: (c:any) => React.createElement(ColumnOption, { column: c }),
+              valueKey: 'column_name',
+              mapStateToProps: (state:any) => ({
+                options: state.datasource ? state.datasource.columns : [],
+              }),
+              renderTrigger: true,
+             },
+          },
+        ],
+      ],
+    },
     timeSeriesSection[1],
     sections.annotations,
   ],
