@@ -19,7 +19,7 @@
 import memoizeOne from 'memoize-one';
 import { DataRecord } from '@superset-ui/chart';
 import { QueryFormDataMetric } from '@superset-ui/query';
-import { getNumberFormatter, NumberFormats } from '@superset-ui/number-format';
+import { getNumberFormatter, NumberFormats, createD3NumberFormatter } from '@superset-ui/number-format';
 import {
   getTimeFormatter,
   smartDateFormatter,
@@ -128,6 +128,15 @@ const processColumns = memoizeOne(function processColumns(props: TableChartProps
     }
     // fallback to column level formats defined in datasource
     const format = columnFormats?.[key];
+    const formatValue = createD3NumberFormatter({
+      formatString: ',.2f',
+      locale: {
+        decimal: ',',
+        thousands: '.',
+        grouping: [3],
+        currency: ['$', '']
+      }
+    });
     const isTime = isTimeType(key, records);
     // for the purpose of presentation, only numeric values are treated as metrics
     const isMetric = metricsSet.has(key) && isNumeric(key, records);
@@ -151,7 +160,7 @@ const processColumns = memoizeOne(function processColumns(props: TableChartProps
       }
       dataType = DataType.DateTime;
     } else if (isMetric) {
-      formatter = getNumberFormatter(format);
+      formatter = formatValue;
     } else if (isPercentMetric) {
       // percent metrics have a default format
       formatter = getNumberFormatter(format || PERCENT_3_POINT);
