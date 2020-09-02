@@ -55,6 +55,7 @@ export interface TableChartFormData {
   tableTimestampFormat?: string;
   tableFilter?: boolean;
   timeGrainSqla?: TimeGranularity;
+  allColumnsFilterEvent?: string[];
 }
 
 export interface TableChartProps<D extends DataRecord = DataRecord> extends ChartProps {
@@ -83,4 +84,5 @@ export interface TableChartTransformedProps<D extends DataRecord = DataRecord> {
   filters?: DataRecordFilters;
   emitFilter?: boolean;
   onChangeFilter?: ChartProps['hooks']['onAddFilter'];
+  allColumnsFilterEvent?: string[];
 }

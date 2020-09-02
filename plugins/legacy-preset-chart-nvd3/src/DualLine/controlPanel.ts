@@ -49,7 +49,7 @@ export default {
       controlSetRows: [
         [
           {
-            name: 'all_columns_filter_required'
+            name: 'all_columns_filter_required',
             config: {
               type: 'SelectControl',
               label: t('Column Filter Required'),
