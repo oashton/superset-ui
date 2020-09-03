@@ -37,7 +37,6 @@ const propTypes = {
   colorScheme: PropTypes.string,
 };
 
-const formatNumber = getNumberFormatter(NumberFormats.FLOAT);
 const formatNumber = createD3NumberFormatter({
   formatString: ',.2f',
   locale: {
