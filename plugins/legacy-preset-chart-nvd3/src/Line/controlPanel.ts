@@ -16,8 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+import React from 'react'
 import { t } from '@superset-ui/translation';
-import { sections } from '@superset-ui/chart-controls';
+import { sections, ColumnOption } from '@superset-ui/chart-controls';
 import {
   lineInterpolation,
   showBrush,
@@ -97,8 +98,12 @@ export default {
               allowAll: true,
               commaChoosesOption: false,
               default: [],
-              optionRenderer: (c:any) => React.createElement(ColumnOption, { showType: true, column: c }),
-              valueRenderer: (c:any) => React.createElement(ColumnOption, { column: c }),
+              optionRenderer: (c:any) => {
+                return React.createElement(ColumnOption, {showType: true, column: c});
+              },
+              valueRenderer: (c:any) => {
+                return React.createElement(ColumnOption, {column: c});
+              },
               valueKey: 'column_name',
               mapStateToProps: (state:any) => ({
                 options: state.datasource ? state.datasource.columns : [],

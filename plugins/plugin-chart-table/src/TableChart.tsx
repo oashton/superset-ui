@@ -126,7 +126,6 @@ export default function TableChart<D extends DataRecord = DataRecord>(
     onChangeFilter,
     filters: initialFilters,
     sticky = true, // whether to use sticky header
-    allColumnsFilterEvent,
   } = props;
 
   const [filters, setFilters] = useState(initialFilters);
