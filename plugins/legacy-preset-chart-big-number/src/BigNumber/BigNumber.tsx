@@ -84,6 +84,7 @@ type BigNumberVisProps = {
   timeRangeFixed?: boolean;
   trendLineData?: TimeSeriesDatum[];
   mainColor: string;
+  textColor?: string;
 };
 
 class BigNumberVis extends React.PureComponent<BigNumberVisProps, {}> {
@@ -134,9 +135,8 @@ class BigNumberVis extends React.PureComponent<BigNumberVisProps, {}> {
   }
 
   renderHeader(maxHeight: number) {
-    const { bigNumber, formatNumber, width } = this.props;
+    const { bigNumber, formatNumber, width, textColor } = this.props;
     const text = bigNumber === null ? t('No data') : formatNumber(bigNumber);
-
     const container = this.createTemporaryContainer();
     document.body.append(container);
     const fontSize = computeMaxFontSize({
@@ -154,6 +154,7 @@ class BigNumberVis extends React.PureComponent<BigNumberVisProps, {}> {
         style={{
           fontSize,
           height: maxHeight,
+          color: textColor ? textColor : 'black',
         }}
       >
         {text}
