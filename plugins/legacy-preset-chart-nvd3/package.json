@@ -1,5 +1,5 @@
 {
-  "name": "@superset-ui/legacy-preset-chart-nvd3",
+  "name": "@superset-ui-uptime/legacy-preset-chart-nvd3",
   "version": "0.14.17",
   "description": "Superset Legacy Chart - NVD3",
   "sideEffects": [

@@ -1,5 +1,5 @@
 {
-  "name": "@superset-ui/legacy-plugin-chart-iframe",
+  "name": "@superset-ui-uptime/legacy-plugin-chart-iframe",
   "version": "0.14.9",
   "description": "Superset Legacy Chart - Iframe",
   "sideEffects": [
