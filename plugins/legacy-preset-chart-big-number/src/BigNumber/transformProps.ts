@@ -74,6 +74,7 @@ export default function transformProps(chartProps: BignumberChartProps) {
     timeGrainSqla: granularity,
     vizType,
     timeRangeFixed = false,
+    textColor
   } = formData;
   let { yAxisFormat } = formData;
   const { data = [], from_dttm: fromDatetime, to_dttm: toDatetime } = queryData;
@@ -161,5 +162,6 @@ export default function transformProps(chartProps: BignumberChartProps) {
     fromDatetime,
     toDatetime,
     timeRangeFixed,
+    textColor,
   };
 }
