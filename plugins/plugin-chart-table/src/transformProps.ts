@@ -19,7 +19,11 @@
 import memoizeOne from 'memoize-one';
 import { DataRecord } from '@superset-ui/chart';
 import { QueryFormDataMetric } from '@superset-ui/query';
-import { getNumberFormatter, NumberFormats, createD3NumberFormatter } from '@superset-ui/number-format';
+import {
+  getNumberFormatter,
+  NumberFormats,
+  createD3NumberFormatter,
+} from '@superset-ui/number-format';
 import {
   getTimeFormatter,
   smartDateFormatter,
@@ -134,12 +138,12 @@ const processColumns = memoizeOne(function processColumns(props: TableChartProps
         decimal: ',',
         thousands: '.',
         grouping: [3],
-        currency: ['$', '']
-      }
+        currency: ['$', ''],
+      },
     });
     const isTime = isTimeType(key, records);
     // for the purpose of presentation, only numeric values are treated as metrics
-    const isMetric = metricsSet.has(key) && isNumeric(key, records);
+    const isMetric = metricsSet.has(key) || isNumeric(key, records);
     const isPercentMetric = percentMetricsSet.has(key);
     let dataType = DataType.Number; // TODO: get this from data source
     let formatter;
@@ -239,6 +243,6 @@ export default function transformProps(chartProps: TableChartProps): TableChartT
     filters,
     emitFilter: tableFilter === true,
     onChangeFilter,
-    allColumnsFilterEvent
+    allColumnsFilterEvent,
   };
 }
