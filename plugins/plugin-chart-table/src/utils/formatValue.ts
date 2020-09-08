@@ -33,7 +33,7 @@ const xss = new FilterXSS({
 });
 
 const THOUSAND_LIMIT = 999;
-const defaultNumberFormatter = createD3NumberFormatter({
+export const defaultNumberFormatter = createD3NumberFormatter({
   formatString: ',.2f',
   locale: {
     decimal: ',',

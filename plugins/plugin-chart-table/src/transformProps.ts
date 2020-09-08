@@ -19,11 +19,7 @@
 import memoizeOne from 'memoize-one';
 import { DataRecord } from '@superset-ui/chart';
 import { QueryFormDataMetric } from '@superset-ui/query';
-import {
-  getNumberFormatter,
-  NumberFormats,
-  createD3NumberFormatter,
-} from '@superset-ui/number-format';
+import { getNumberFormatter, NumberFormats } from '@superset-ui/number-format';
 import {
   getTimeFormatter,
   smartDateFormatter,
@@ -34,6 +30,7 @@ import {
 import isEqualArray from './utils/isEqualArray';
 import DateWithFormatter from './utils/DateWithFormatter';
 import { TableChartProps, TableChartTransformedProps, DataType, DataColumnMeta } from './types';
+import { defaultNumberFormatter } from './utils/formatValue';
 
 const { PERCENT_3_POINT } = NumberFormats;
 const TIME_COLUMN = '__timestamp';
@@ -132,18 +129,9 @@ const processColumns = memoizeOne(function processColumns(props: TableChartProps
     }
     // fallback to column level formats defined in datasource
     const format = columnFormats?.[key];
-    const formatValue = createD3NumberFormatter({
-      formatString: ',.2f',
-      locale: {
-        decimal: ',',
-        thousands: '.',
-        grouping: [3],
-        currency: ['$', ''],
-      },
-    });
     const isTime = isTimeType(key, records);
     // for the purpose of presentation, only numeric values are treated as metrics
-    const isMetric = metricsSet.has(key) || isNumeric(key, records);
+    const isMetric = metricsSet.has(key) && isNumeric(key, records);
     const isPercentMetric = percentMetricsSet.has(key);
     let dataType = DataType.Number; // TODO: get this from data source
     let formatter;
@@ -164,7 +152,7 @@ const processColumns = memoizeOne(function processColumns(props: TableChartProps
       }
       dataType = DataType.DateTime;
     } else if (isMetric) {
-      formatter = formatValue;
+      formatter = defaultNumberFormatter;
     } else if (isPercentMetric) {
       // percent metrics have a default format
       formatter = getNumberFormatter(format || PERCENT_3_POINT);
