@@ -18,8 +18,8 @@
  */
 import { FilterXSS, getDefaultWhiteList } from 'xss';
 import { DataRecordValue } from '@superset-ui/chart';
-import { DataColumnMeta } from '../types';
-
+import { createD3NumberFormatter } from '@superset-ui/number-format';
+import { DataColumnMeta, DataType } from '../types';
 const xss = new FilterXSS({
   whiteList: {
     ...getDefaultWhiteList(),
@@ -30,6 +30,17 @@ const xss = new FilterXSS({
   },
   stripIgnoreTag: true,
   css: false,
+});
+
+const THOUSAND_LIMIT = 999;
+const defaultNumberFormatter = createD3NumberFormatter({
+  formatString: ',.2f',
+  locale: {
+    decimal: ',',
+    thousands: '.',
+    grouping: [3],
+    currency: ['$', ''],
+  },
 });
 
 function isProbablyHTML(text: string) {
@@ -51,6 +62,9 @@ export default function formatValue(
   }
   if (typeof value === 'string') {
     return isProbablyHTML(value) ? [true, xss.process(value)] : [false, value];
+  }
+  if (typeof value === DataType.Number && ((value as any) % 1 !== 0 || value > THOUSAND_LIMIT)) {
+    return [false, defaultNumberFormatter(value as number)];
   }
   return [false, value.toString()];
 }
