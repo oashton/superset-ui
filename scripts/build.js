@@ -31,10 +31,10 @@ if (glob) {
   rimraf.sync(
     `./{packages,plugins}/${glob}/{lib,esm,tsconfig.tsbuildinfo,node_modules/@types/react}`,
   );
-  const packageName = glob.replace(/^superset-ui-/, '');
-  run(`nimbus babel --clean --workspaces="@superset-ui/${packageName}" ${BABEL_CONFIG}`);
-  run(`nimbus babel --clean --workspaces="@superset-ui/${packageName}" --esm ${BABEL_CONFIG}`);
-  run(`nimbus typescript --build --workspaces="@superset-ui/${packageName}"`);
+  const packageName = glob.replace(/^superset-ui-uptime/, '');
+  run(`nimbus babel --clean --workspaces="@superset-ui-uptime/${packageName}" ${BABEL_CONFIG}`);
+  run(`nimbus babel --clean --workspaces="@superset-ui-uptime/${packageName}" --esm ${BABEL_CONFIG}`);
+  run(`nimbus typescript --build --workspaces="@superset-ui-uptime/${packageName}"`);
   // eslint-disable-next-line global-require
   require('./copyAssets');
 } else {
