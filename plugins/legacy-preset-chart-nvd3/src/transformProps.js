@@ -122,9 +122,11 @@ export default function transformProps(chartProps) {
     markers = tokenizeToNumericArray(markers);
   }
 
-  var metric_size = datasource.metrics.filter(metric => {
-    return metric.metric_name === size
-  })
+  let metric_size = datasource.metrics
+    ? datasource.metrics.filter(metric => {
+        return metric.metric_name === size;
+      })
+    : [undefined];
 
   return {
     width,
@@ -171,7 +173,7 @@ export default function transformProps(chartProps) {
     showLegend,
     showMarkers,
     sizeField: size,
-    sizeFormat: metric_size[0] !== undefined ? metric_size[0].d3format: undefined,
+    sizeFormat: metric_size[0] !== undefined ? metric_size[0].d3format : undefined,
     useRichTooltip: richTooltip,
     vizType,
     xAxisFormat,

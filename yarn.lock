@@ -3582,6 +3582,31 @@
     conventional-changelog-cli "^2.0.12"
     cz-conventional-changelog "^2.1.0"
 
+"@superset-ui/legacy-plugin-chart-iframe@0.14.9":
+  version "0.14.9"
+  resolved "https://registry.yarnpkg.com/@superset-ui/legacy-plugin-chart-iframe/-/legacy-plugin-chart-iframe-0.14.9.tgz#42aa10b4eb5e449c7922e524f04a88951c4ee114"
+  integrity sha512-/vpkBTtXnbSPzomhThnSXzpx/jZ+dwKVNhGD1Uy5lPCSod+W51Z7F5wq4T/ODUpuCcwRwM7RQuLA2ha5TeLiTw==
+  dependencies:
+    mustache "^4.0.0"
+    prop-types "^15.6.2"
+
+"@superset-ui/legacy-plugin-chart-pivot-table@0.14.14":
+  version "0.14.14"
+  resolved "https://registry.yarnpkg.com/@superset-ui/legacy-plugin-chart-pivot-table/-/legacy-plugin-chart-pivot-table-0.14.14.tgz#958dfd169b0890d7db4a0bd8f758d8fdb8d615ca"
+  integrity sha512-+Dkzwv9yfiix6/u090RN2U2VF0Axa7sB+dB57UU5IS3zW1/jxW7e5ewEV2LsmcXQ0d87bWXvhUn+IGagkwx7Wg==
+  dependencies:
+    d3 "^3.5.17"
+    datatables.net-bs "^1.10.15"
+    prop-types "^15.6.2"
+
+"@superset-ui/legacy-plugin-chart-sankey@0.14.11":
+  version "0.14.11"
+  resolved "https://registry.yarnpkg.com/@superset-ui/legacy-plugin-chart-sankey/-/legacy-plugin-chart-sankey-0.14.11.tgz#ed6585081bf93e505c63f1356a94c3356d371164"
+  integrity sha512-gt931s0puamUkl1u3NcUxVEKCIMzuGoWhrFphSQyi3WXrV4dmGim2xlSHctdbxG2X6mV6FtGpGb4+IoNtme3vg==
+  dependencies:
+    d3 "^3.5.17"
+    d3-sankey "^0.4.2"
+
 "@superset-ui/legacy-plugin-chart-word-cloud@^0.11.15":
   version "0.11.15"
   resolved "https://registry.yarnpkg.com/@superset-ui/legacy-plugin-chart-word-cloud/-/legacy-plugin-chart-word-cloud-0.11.15.tgz#70a146aaf3cf1977c29086c069f0216325f092b2"
@@ -3590,6 +3615,35 @@
     d3 "^3.5.17"
     d3-cloud "^1.2.1"
     prop-types "^15.6.2"
+
+"@superset-ui/legacy-preset-chart-big-number@0.14.9":
+  version "0.14.9"
+  resolved "https://registry.yarnpkg.com/@superset-ui/legacy-preset-chart-big-number/-/legacy-preset-chart-big-number-0.14.9.tgz#a97da164c1c964058a227ddf3b7d9da3bb812975"
+  integrity sha512-hGwiSIiyEtZP54bjtZe3MaenSCrfgo0UJDO05fI6mRWybeZIj9QAZmGoZTx7Mdtw6TmAD+mAoAIgIey4EPChQg==
+  dependencies:
+    "@data-ui/xy-chart" "^0.0.84"
+    "@types/d3-color" "^1.2.2"
+    "@types/shortid" "^0.0.29"
+    d3-color "^1.2.3"
+    shortid "^2.2.14"
+
+"@superset-ui/plugin-chart-table@0.14.16":
+  version "0.14.16"
+  resolved "https://registry.yarnpkg.com/@superset-ui/plugin-chart-table/-/plugin-chart-table-0.14.16.tgz#e8f38b3b75b938c4011500b2e26296f2612554d6"
+  integrity sha512-N95ptdDNQatU2CmznsVbFWGumj9Z59oF694NXZkbqJB/Bp+4OPkvjybjOrlEMmay2zj2sXFHAxO0b3ZKKcCucg==
+  dependencies:
+    "@emotion/core" "^10.0.28"
+    "@types/d3-array" "^2.0.0"
+    "@types/match-sorter" "^4.0.0"
+    "@types/react" "^16.9.43"
+    "@types/react-table" "^7.0.19"
+    d3-array "^2.4.0"
+    match-sorter "^4.1.0"
+    memoize-one "^5.1.1"
+    react-icons "^3.10.0"
+    react-table "^7.2.1"
+    regenerator-runtime "^0.13.5"
+    xss "^1.0.6"
 
 "@svgr/babel-plugin-add-jsx-attribute@^4.2.0":
   version "4.2.0"
