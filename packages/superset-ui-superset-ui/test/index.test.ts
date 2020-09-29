@@ -9,6 +9,9 @@ import {
   buildQueryContext,
   getTimeFormatterRegistry,
   t,
+  validateInteger,
+  supersetTheme,
+  D3_FORMAT_DOCS,
 } from '../src';
 
 describe('@superset-ui/superset-ui', () => {
@@ -24,6 +27,9 @@ describe('@superset-ui/superset-ui', () => {
   it('should export @superset-ui/connection', () => {
     expect(SupersetClient).toBeDefined();
   });
+  it('should export @superset-ui/chart-controls', () => {
+    expect(D3_FORMAT_DOCS).toBeDefined();
+  });
   it('should export @superset-ui/core', () => {
     expect(Registry).toBeDefined();
   });
@@ -36,10 +42,16 @@ describe('@superset-ui/superset-ui', () => {
   it('should export @superset-ui/query', () => {
     expect(buildQueryContext).toBeDefined();
   });
+  it('should export @superset-ui/style', () => {
+    expect(supersetTheme).toBeDefined();
+  });
   it('should export @superset-ui/time-format', () => {
     expect(getTimeFormatterRegistry).toBeDefined();
   });
   it('should export @superset-ui/translation', () => {
     expect(t).toBeDefined();
+  });
+  it('should export @superset-ui/validator', () => {
+    expect(validateInteger).toBeDefined();
   });
 });

@@ -1,18 +1,19 @@
 import React, { ReactNode } from 'react';
-import { SupersetClient } from '@superset-ui/connection';
+import { SupersetClient, Method } from '@superset-ui/connection';
+import { makeApi, SupersetApiError } from '@superset-ui/query';
 import ErrorMessage from './ErrorMessage';
 
 export type Props = {
   children: ({ payload }: { payload?: object }) => ReactNode;
   endpoint?: string;
   host: string;
-  method?: 'POST' | 'GET';
+  method?: Method;
   postPayload?: string;
 };
 
 type State = {
   didVerify: boolean;
-  error?: Error;
+  error?: Error | SupersetApiError;
   payload?: object;
 };
 
@@ -51,30 +52,25 @@ export default class VerifyCORS extends React.Component<Props, State> {
 
   handleVerify() {
     const { endpoint, host, postPayload, method } = this.props;
-
     SupersetClient.reset();
-
     SupersetClient.configure({
       credentials: 'include',
       host,
       mode: 'cors',
     })
       .init()
-      .then(() =>
+      .then(() => {
         // Test an endpoint if specified
-        endpoint
-          ? SupersetClient.request({
-              endpoint,
-              method,
-              postPayload: postPayload ? JSON.parse(postPayload) : '',
-            })
-          : Promise.resolve({}),
-      )
-      .then(response => this.setState({ didVerify: true, error: undefined, payload: response }))
-      .catch((error: Response) => {
-        const { status, statusText = error } = error;
-        this.setState({ error: Error(`${status || ''}${status ? ':' : ''} ${statusText}`) });
-      });
+        if (endpoint && postPayload) {
+          return makeApi({
+            endpoint,
+            method,
+          })(postPayload);
+        }
+        return { error: 'Must provide valid endpoint and payload.' };
+      })
+      .then(result => this.setState({ didVerify: true, error: undefined, payload: result }))
+      .catch(error => this.setState({ error }));
   }
 
   render() {
@@ -94,11 +90,7 @@ export default class VerifyCORS extends React.Component<Props, State> {
           3) click below to verify authentication. You may debug CORS further using the
           `@superset-ui/connection` story. <br />
           <br />
-          <button
-            type="button"
-            onClick={this.handleVerify}
-            className="btn btn-outline-primary btn-sm"
-          >
+          <button type="button" className="btn btn-primary btn-sm" onClick={this.handleVerify}>
             Verify
           </button>
           <br />

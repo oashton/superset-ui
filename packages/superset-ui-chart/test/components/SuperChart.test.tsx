@@ -225,6 +225,7 @@ describe('SuperChart', () => {
           height="100%"
         />,
       );
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       triggerResizeObserver();
 
       return promiseTimeout(() => {
@@ -243,15 +244,12 @@ describe('SuperChart', () => {
           height="125"
         />,
       );
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       triggerResizeObserver([{ contentRect: { height: 125, width: 150 } }]);
 
       return promiseTimeout(() => {
         const renderedWrapper = wrapper.render();
-        const boundingBox = renderedWrapper
-          .find('div.test-component')
-          .parent()
-          .parent()
-          .parent();
+        const boundingBox = renderedWrapper.find('div.test-component').parent().parent().parent();
         expect(boundingBox.css('width')).toEqual('50%');
         expect(boundingBox.css('height')).toEqual('125px');
         expect(renderedWrapper.find('div.test-component')).toHaveLength(1);
@@ -268,15 +266,12 @@ describe('SuperChart', () => {
           height="25%"
         />,
       );
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       triggerResizeObserver([{ contentRect: { height: 75, width: 50 } }]);
 
       return promiseTimeout(() => {
         const renderedWrapper = wrapper.render();
-        const boundingBox = renderedWrapper
-          .find('div.test-component')
-          .parent()
-          .parent()
-          .parent();
+        const boundingBox = renderedWrapper.find('div.test-component').parent().parent().parent();
         expect(boundingBox.css('width')).toEqual('50px');
         expect(boundingBox.css('height')).toEqual('25%');
         expect(renderedWrapper.find('div.test-component')).toHaveLength(1);
@@ -291,6 +286,7 @@ describe('SuperChart', () => {
           debounceTime={1}
         />,
       );
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       triggerResizeObserver();
 
       return promiseTimeout(() => {
@@ -344,6 +340,7 @@ describe('SuperChart', () => {
           Wrapper={MyWrapper}
         />,
       );
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       triggerResizeObserver();
 
       return promiseTimeout(() => {

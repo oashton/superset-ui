@@ -1,4 +1,4 @@
-import makeSingleton from '../../src/utils/makeSingleton';
+import { makeSingleton } from '../../src';
 
 describe('makeSingleton()', () => {
   class Dog {
@@ -6,8 +6,8 @@ describe('makeSingleton()', () => {
 
     isSitting?: boolean;
 
-    constructor(name: string) {
-      this.name = name;
+    constructor(name?: string) {
+      this.name = name || 'Pluto';
     }
 
     sit() {
