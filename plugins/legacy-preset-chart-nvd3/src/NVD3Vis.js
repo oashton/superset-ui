@@ -1021,7 +1021,7 @@ function nvd3Vis(element, props) {
 
               // update annotation positions on brush event
               if (chart.focus) {
-                chart.focus.dispatch.on('onBrush.event-annotation', () => {
+                chart.focus.dispatch.on(`onBrush.event-annotation-${index}`, () => {
                   annotations
                     .selectAll('line')
                     .data(records)
@@ -1112,7 +1112,7 @@ function nvd3Vis(element, props) {
 
               // update annotation positions on brush event
               if (chart.focus) {
-                chart.focus.dispatch.on('onBrush.interval-annotation', () => {
+                chart.focus.dispatch.on(`onBrush.interval-annotation-${index}`, () => {
                   annotations
                     .selectAll('rect')
                     .data(records)
@@ -1160,44 +1160,41 @@ function nvd3Vis(element, props) {
     hideTooltips(true);
   }
 
-  nv.addGraph(drawGraph
-    , function() {
-      // for pie chart .nv-pie
-      switch (vizType) {
-        case 'pie':
-          d3.selectAll('.nv-pieChart .nv-legend-symbol').on('click', function(el) {
-            const selectedElem = this;
-            let filter_selections = [];
-            if ( groupby.length == 1 ) {
-              const filter_name = groupby[0];
-              filter_selections.push(this.__data__.x);
-              applyFilter(d3.select(this), filter_name, filter_selections);
-            }
-          });
-          break;
-        case 'line':
-          d3.selectAll('.line .nv-legend-symbol').on('click', function(el) {
-            let filter_selections = [];
-            if ( groupby.length == 1 ) {
-              const filter_name = groupby[0];
-              filter_selections.push(this.__data__.key);
-              applyFilter(d3.select(this), filter_name, filter_selections);
-            }
-
-          });
-          break;
-        case 'bubble':
-          d3.selectAll('.bubble .nv-legend-symbol').on('click', function(el) {
-            const selectedElem = this;
-            let filter_selections = [];
-            const filter_name = series;
+  nv.addGraph(drawGraph, function () {
+    // for pie chart .nv-pie
+    switch (vizType) {
+      case 'pie':
+        d3.selectAll('.nv-pieChart .nv-legend-symbol').on('click', function (el) {
+          const selectedElem = this;
+          let filter_selections = [];
+          if (groupby.length == 1) {
+            const filter_name = groupby[0];
+            filter_selections.push(this.__data__.x);
+            applyFilter(d3.select(this), filter_name, filter_selections);
+          }
+        });
+        break;
+      case 'line':
+        d3.selectAll('.line .nv-legend-symbol').on('click', function (el) {
+          let filter_selections = [];
+          if (groupby.length == 1) {
+            const filter_name = groupby[0];
             filter_selections.push(this.__data__.key);
             applyFilter(d3.select(this), filter_name, filter_selections);
-          });
-          break;
-       }
+          }
+        });
+        break;
+      case 'bubble':
+        d3.selectAll('.bubble .nv-legend-symbol').on('click', function (el) {
+          const selectedElem = this;
+          let filter_selections = [];
+          const filter_name = series;
+          filter_selections.push(this.__data__.key);
+          applyFilter(d3.select(this), filter_name, filter_selections);
+        });
+        break;
     }
-  );
+  });
 
   function applyFilter(selection, filter_name, filter_selections) {
     const newSelectedValues = {
