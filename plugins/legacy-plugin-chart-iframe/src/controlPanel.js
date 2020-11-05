@@ -17,7 +17,8 @@
  * under the License.
  */
 import { t } from '@superset-ui/translation';
-import { ColumnOption} from '@superset-ui/chart-controls';
+import { ColumnOption } from '@superset-ui/chart-controls';
+import React from 'react';
 
 export default {
   controlPanelSections: [
